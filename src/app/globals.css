@@ -1,20 +1,28 @@
 @import "tailwindcss";
 
-@layer base {
+@layer theme {
   :root {
-    /* Light theme colors */
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
-    
+    /* ===== Light Theme ===== */
+    --color-background: 210 25% 98%; /* Light mist gray-blue */
+    --color-foreground: 220 20% 15%; /* Charcoal text */
+    --color-card: 0 0% 100%; /* Clean white cards */
+    --color-card-foreground: 220 20% 15%;
+    --color-popover: 0 0% 100%;
+    --color-popover-foreground: 220 20% 15%;
+
+    --color-primary: 160 45% 45%; /* Muted teal-green (fresh & modern) */
+    --color-primary-foreground: 0 0% 100%;
+    --color-secondary: 45 85% 55%; /* Warm amber-gold accent */
+    --color-secondary-foreground: 0 0% 15%;
+    --color-destructive: 15 70% 50%; /* Burnt orange (less harsh than red) */
+    --color-destructive-foreground: 0 0% 100%;
+
+    --color-muted: 210 20% 94%; /* Subtle gray background */
+    --color-muted-foreground: 210 10% 40%;
+    --color-border: 210 20% 85%;
+    --color-input: 210 20% 96%;
+    --color-ring: 160 45% 50%; /* Matches teal primary */
+
     /* Border radius */
     --radius-lg: 1rem;
     --radius-md: 0.5rem;
@@ -22,30 +30,110 @@
   }
 
   .dark {
-    /* Dark theme colors */
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+    /* Keep your existing base colors */
+    --color-background: 220 20% 9%;
+    --color-foreground: 0 0% 96%;
+    --color-card: 220 20% 13%;
+    --color-card-foreground: 0 0% 96%;
+    --color-popover: 220 20% 14%;
+    --color-popover-foreground: 0 0% 96%;
+
+    /* ↓ Updated button colors ↓ */
+    --color-primary: 210 25% 65%; /* Muted steel blue — calm, modern */
+    --color-primary-foreground: 0 0% 10%;
+
+    --color-secondary: 160 15% 55%; /* Sage green-gray — balanced and earthy */
+    --color-secondary-foreground: 0 0% 10%;
+
+    --color-destructive: 10 40% 55%; /* Muted brick red — softer and elegant */
+    --color-destructive-foreground: 0 0% 10%;
+
+    /* Rest unchanged */
+    --color-muted: 220 15% 20%;
+    --color-muted-foreground: 220 10% 70%;
+    --color-border: 220 15% 22%;
+    --color-input: 220 15% 18%;
+    --color-ring: 210 25% 65%;
   }
 }
 
-@layer base {
-  html {
-    background-color: hsl(var(--background));
+html {
+  background-color: hsl(var(--color-background));
+}
+
+body {
+  background-color: hsl(var(--color-background));
+  color: hsl(var(--color-foreground));
+  font-feature-settings: "rlig" 1, "calt" 1;
+  min-height: 100vh;
+}
+
+/* ===== Elevation Shadows ===== */
+@layer utilities {
+  /* Light mode shadows */
+  .shadow-elevation-low {
+    box-shadow: 
+      0 1px 3px rgba(0, 0, 0, 0.08),
+      0 1px 2px rgba(0, 0, 0, 0.06);
   }
   
-  body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
-    font-feature-settings: "rlig" 1, "calt" 1;
-    min-height: 100vh;
+  .shadow-elevation-medium {
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.08),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  .shadow-elevation-high {
+    box-shadow: 
+      0 10px 15px -3px rgba(0, 0, 0, 0.08),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  .shadow-elevation-card {
+    box-shadow: 
+      0 2px 8px rgba(0, 0, 0, 0.06),
+      0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+  
+  .shadow-elevation-card-hover {
+    box-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.1),
+      0 2px 6px rgba(0, 0, 0, 0.06);
+  }
+
+  /* Dark mode shadows - more pronounced with subtle glow */
+  .dark .shadow-elevation-low {
+    box-shadow: 
+      0 1px 3px rgba(0, 0, 0, 0.3),
+      0 1px 2px rgba(0, 0, 0, 0.2),
+      0 0 0 1px rgba(255, 255, 255, 0.03);
+  }
+  
+  .dark .shadow-elevation-medium {
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.4),
+      0 2px 4px -1px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(255, 255, 255, 0.04);
+  }
+  
+  .dark .shadow-elevation-high {
+    box-shadow: 
+      0 10px 15px -3px rgba(0, 0, 0, 0.5),
+      0 4px 6px -2px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+  
+  .dark .shadow-elevation-card {
+    box-shadow: 
+      0 2px 8px rgba(0, 0, 0, 0.4),
+      0 1px 3px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(255, 255, 255, 0.04);
+  }
+  
+  .dark .shadow-elevation-card-hover {
+    box-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.5),
+      0 2px 6px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.06);
   }
 }

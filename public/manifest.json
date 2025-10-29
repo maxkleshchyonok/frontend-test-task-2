@@ -1,7 +1,7 @@
 {
-  "name": "Next.js PWA with Redux & Tailwind",
-  "short_name": "Next PWA",
-  "description": "A Progressive Web App built with Next.js, Redux Toolkit, and Tailwind CSS",
+  "name": "Construction Machine Management",
+  "short_name": "Machine Mgmt",
+  "description": "Manage your fleet of construction machines efficiently",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

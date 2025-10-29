@@ -1,10 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import exampleReducer from './slices/exampleSlice';
+import machineTypesReducer from './slices/machineTypesSlice';
+import machinesReducer from './slices/machinesSlice';
 
 export const store = configureStore({
   reducer: {
-    example: exampleReducer,
-    // Add more reducers here
+    machineTypes: machineTypesReducer,
+    machines: machinesReducer,
   },
 });
 

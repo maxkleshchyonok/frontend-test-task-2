@@ -1,13 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { deleteMachineType } from '@/store/slices/machineTypesSlice';
 import { deleteMachinesByType } from '@/store/slices/machinesSlice';
 import MachineTypeForm from '@/components/MachineTypeForm';
+import Header from '@/components/Header';
 import { MachineType } from '@/types';
-import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 
 export default function ManageTypesPage() {
   const dispatch = useAppDispatch();
@@ -31,23 +30,11 @@ export default function ManageTypesPage() {
 
   return (
     <div style={{ backgroundColor: 'hsl(var(--color-background))' }} className="min-h-screen">
-      <header style={{ backgroundColor: 'hsl(var(--color-card))' }} className="border-b shadow-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link 
-                href="/"
-                style={{ color: 'hsl(var(--color-muted-foreground))' }}
-                className="hover:opacity-70 transition"
-              >
-                ← Back
-              </Link>
-              <h1 className="text-2xl font-bold">Manage Machine Types</h1>
-            </div>
-            <ThemeSwitcher />
-          </div>
-        </div>
-      </header>
+      <Header 
+        showBackButton={true}
+        title="Manage Machine Types"
+        highlightManageTypes={true}
+      />
 
       <main className="container mx-auto px-4 py-8">
         <div className="mb-6">

@@ -6,20 +6,15 @@ export interface Attribute {
   type: AttributeType;
 }
 
-export type TitleConfig =
-  | { type: "manual" }
-  | { type: "linked"; attributeId: string };
-
 export interface MachineType {
   id: string;
-  title: string;
+  name: string;
   attributes: Attribute[];
-  titleConfig: TitleConfig;
+  titleAttributeId?: string; // ID of the attribute to use as title, undefined if no title
 }
 
 export interface Machine {
   id: string;
   typeId: string;
-  title: string;
   values: Record<string, string | number | boolean>;
 }

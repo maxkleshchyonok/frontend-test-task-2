@@ -1,8 +1,9 @@
 'use client';
 
-import { MachineType, Attribute, AttributeType, TitleConfig } from '@/types';
+import { MachineType, Attribute, AttributeType } from '@/types';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { addMachineType, updateMachineType } from '@/store/slices/machineTypesSlice';
+import { syncMachinesWithTypeChange } from '@/store/slices/machinesSlice';
 import { useState, FormEvent } from 'react';
 
 interface MachineTypeFormProps {
@@ -13,55 +14,87 @@ interface MachineTypeFormProps {
 export default function MachineTypeForm({ machineType, onClose }: MachineTypeFormProps) {
   const dispatch = useAppDispatch();
   const existingTypes = useAppSelector((state) => state.machineTypes.types);
-  const [machineType_, setMachineType] = useState(machineType?.title ?? '');
-  const [attributes, setAttributes] = useState<Attribute[]>(
-    machineType?.attributes ?? []
-  );
-  const [titleConfig, setTitleConfig] = useState<TitleConfig>(
-    machineType?.titleConfig ?? { type: 'manual' }
-  );
-  const [error, setError] = useState('');
+  const [typeName, setTypeName] = useState(machineType?.name ?? '');
   
-  const [originalAttributeIds] = useState<Set<string>>(
-    new Set(machineType?.attributes.map(attr => attr.id) ?? [])
-  );
+  // Initialize with one attribute if creating a new type
+  const [attributes, setAttributes] = useState<Attribute[]>(() => {
+    if (machineType?.attributes) {
+      return machineType.attributes;
+    }
+    // Create initial attribute for new types
+    const initialAttr: Attribute = {
+      id: Date.now().toString(),
+      name: '',
+      type: 'text',
+    };
+    return [initialAttr];
+  });
+  
+  const [titleAttributeId, setTitleAttributeId] = useState<string | undefined>(() => {
+    if (machineType?.titleAttributeId) {
+      return machineType.titleAttributeId;
+    }
+    // For new types, set the first attribute as title
+    return machineType ? undefined : attributes[0]?.id;
+  });
+  
+  const [error, setError] = useState('');
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     
-    if (!machineType_.trim()) {
-      setError('Machine Type is required');
+    if (!typeName.trim()) {
+      setError('Machine Type name is required');
       return;
     }
 
     const isDuplicate = existingTypes.some(
-      type => type.title.toLowerCase() === machineType_.trim().toLowerCase() && type.id !== machineType?.id
+      type => type.name.toLowerCase() === typeName.trim().toLowerCase() && type.id !== machineType?.id
     );
 
     if (isDuplicate) {
-      setError('This Machine Type already exists. Please use a unique name.');
+      setError('This Machine Type name already exists. Please use a unique name.');
       return;
     }
 
-    const titleAttr: Attribute = {
-      id: 'title',
-      name: 'title',
-      type: 'text',
-    };
-
-    const finalAttributes = attributes.some(attr => attr.id === 'title')
-      ? attributes
-      : [titleAttr, ...attributes];
-
+    // Ensure we have a titleAttributeId if there are attributes
+    const finalTitleAttributeId = titleAttributeId || (attributes.length > 0 ? attributes[0].id : undefined);
+    
     const typeData: MachineType = {
       id: machineType?.id ?? Date.now().toString(),
-      title: machineType_.trim(),
-      attributes: finalAttributes,
-      titleConfig,
+      name: typeName.trim(),
+      attributes,
+      titleAttributeId: finalTitleAttributeId,
     };
 
     if (machineType) {
+      // Check if title attribute changed
+      const oldTitleAttributeId = machineType.titleAttributeId;
+      
+      // Track removed and added attributes
+      const oldAttributeIds = new Set(machineType.attributes.map(a => a.id));
+      const newAttributeIds = new Set(attributes.map(a => a.id));
+      const removedAttributeIds = Array.from(oldAttributeIds).filter(id => !newAttributeIds.has(id));
+      const addedAttributeIds = Array.from(newAttributeIds).filter(id => !oldAttributeIds.has(id));
+      
+      // Get attribute types for title attributes
+      const oldTitleAttr = machineType.attributes.find(a => a.id === oldTitleAttributeId);
+      const newTitleAttr = attributes.find(a => a.id === finalTitleAttributeId);
+      
       dispatch(updateMachineType(typeData));
+      
+      // Sync machines if title attribute changed, attributes were removed, or attributes were added
+      if (oldTitleAttributeId !== finalTitleAttributeId || removedAttributeIds.length > 0 || addedAttributeIds.length > 0) {
+        dispatch(syncMachinesWithTypeChange({
+          typeId: typeData.id,
+          oldTitleAttributeId,
+          newTitleAttributeId: finalTitleAttributeId,
+          removedAttributeIds,
+          addedAttributeIds,
+          oldTitleAttributeType: oldTitleAttr?.type,
+          newTitleAttributeType: newTitleAttr?.type,
+        }));
+      }
     } else {
       dispatch(addMachineType(typeData));
     }
@@ -75,7 +108,13 @@ export default function MachineTypeForm({ machineType, onClose }: MachineTypeFor
       name: '',
       type: 'text',
     };
-    setAttributes([...attributes, newAttr]);
+    const updatedAttributes = [...attributes, newAttr];
+    setAttributes(updatedAttributes);
+    
+    // If this is the first attribute, set it as the title
+    if (attributes.length === 0) {
+      setTitleAttributeId(newAttr.id);
+    }
   };
 
   const updateAttribute = (index: number, field: keyof Attribute, value: string) => {
@@ -93,7 +132,15 @@ export default function MachineTypeForm({ machineType, onClose }: MachineTypeFor
   };
 
   const removeAttribute = (index: number) => {
-    setAttributes(attributes.filter((_, i) => i !== index));
+    const attrToRemove = attributes[index];
+    const remainingAttributes = attributes.filter((_, i) => i !== index);
+    
+    // If the title is linked to this attribute, set to first remaining attribute
+    if (titleAttributeId === attrToRemove.id && remainingAttributes.length > 0) {
+      setTitleAttributeId(remainingAttributes[0].id);
+    }
+    
+    setAttributes(remainingAttributes);
   };
 
   return (
@@ -107,13 +154,13 @@ export default function MachineTypeForm({ machineType, onClose }: MachineTypeFor
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium mb-2">
-                Machine Type <span className="text-red-500">*</span>
+                Machine Type Name <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
-                value={machineType_}
+                value={typeName}
                 onChange={(e) => {
-                  setMachineType(e.target.value);
+                  setTypeName(e.target.value);
                   setError('');
                 }}
                 placeholder="e.g., Bulldozer, Chainsaw, Crane"
@@ -130,58 +177,31 @@ export default function MachineTypeForm({ machineType, onClose }: MachineTypeFor
               </p>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                Machine Title
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={titleConfig.type === 'manual' ? '' : `Linked to "${attributes.find(a => a.id === titleConfig.attributeId)?.name || 'attribute'}"`}
-                  placeholder={titleConfig.type === 'manual' ? 'Enter manual title configuration' : 'Select title configuration from dropdown'}
+            {attributes.length > 0 && (
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Title Attribute <span className="text-red-500">*</span>
+                </label>
+                <select
+                  value={titleAttributeId || (attributes.length > 0 ? attributes[0].id : '')}
+                  onChange={(e) => {
+                    setTitleAttributeId(e.target.value);
+                  }}
                   style={{ backgroundColor: 'hsl(var(--color-background))' }}
-                  className="w-full px-3 py-2 pr-24 rounded-lg shadow-elevation-low focus:shadow-elevation-medium transition-shadow outline-none focus:ring-2 focus:ring-primary/20"
-                  disabled={titleConfig.type !== 'manual'}
-                  readOnly={titleConfig.type !== 'manual'}
-                />
-                <div className="absolute right-2 top-1/2 -translate-y-1/2">
-                  <select
-                    value={titleConfig.type === 'manual' ? 'title' : titleConfig.attributeId}
-                    onChange={(e) => {
-                      if (e.target.value === 'title') {
-                        setTitleConfig({ type: 'manual' });
-                      } else {
-                        setTitleConfig({ type: 'linked', attributeId: e.target.value });
-                      }
-                    }}
-                    style={{ backgroundColor: 'hsl(var(--color-muted) / 0.5)' }}
-                    className="px-2 py-1 pr-6 rounded text-xs shadow-elevation-low appearance-none cursor-pointer hover:shadow-elevation-medium transition-all"
-                    title="Choose title source"
-                  >
-                    <option value="title">manual</option>
-                    {attributes
-                      .filter(a => a.type === 'text' && a.id !== 'title')
-                      .map(attr => (
-                        <option key={attr.id} value={attr.id}>
-                          {attr.name || 'Unnamed'}
-                        </option>
-                      ))
-                    }
-                  </select>
-                  <div className="absolute right-1 top-1/2 -translate-y-1/2 pointer-events-none">
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </div>
-                </div>
+                  className="w-full px-3 py-2 rounded-lg shadow-elevation-low focus:shadow-elevation-medium transition-shadow outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer"
+                  required
+                >
+                  {attributes.map(attr => (
+                    <option key={attr.id} value={attr.id}>
+                      {attr.name || 'Unnamed'} ({attr.type})
+                    </option>
+                  ))}
+                </select>
+                <p style={{ color: 'hsl(var(--color-muted-foreground))' }} className="text-xs mt-1">
+                  Machine title will be the value of &quot;{attributes.find(a => a.id === (titleAttributeId || attributes[0].id))?.name || 'selected attribute'}&quot;
+                </p>
               </div>
-              <p style={{ color: 'hsl(var(--color-muted-foreground))' }} className="text-xs mt-1">
-                {titleConfig.type === 'manual' 
-                  ? 'Users will enter a unique title for each machine'
-                  : `Title will be the same as "${attributes.find(a => a.id === titleConfig.attributeId)?.name || 'selected field'}"`
-                }
-              </p>
-            </div>
+            )}
 
             <div>
               <div className="flex justify-between items-center mb-2">
@@ -217,11 +237,9 @@ export default function MachineTypeForm({ machineType, onClose }: MachineTypeFor
                       <select
                         value={attr.type}
                         onChange={(e) => updateAttribute(index, 'type', e.target.value)}
-                        disabled={originalAttributeIds.has(attr.id)}
                         style={{ 
                           backgroundColor: 'hsl(var(--color-background))',
-                          opacity: originalAttributeIds.has(attr.id) ? 0.6 : 1,
-                          cursor: originalAttributeIds.has(attr.id) ? 'not-allowed' : 'pointer'
+                          cursor: 'pointer'
                         }}
                         className="w-full px-3 py-2 rounded text-sm shadow-elevation-low focus:shadow-elevation-medium transition-shadow outline-none focus:ring-2 focus:ring-primary/20"
                       >

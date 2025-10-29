@@ -11,11 +11,33 @@ const loadState = (): MachineType[] => {
   try {
     const serializedState = localStorage.getItem("machineTypes");
     if (serializedState === null) return [];
-    const types = JSON.parse(serializedState) as MachineType[];
-    return types.map((type) => ({
-      ...type,
-      titleConfig: type.titleConfig ?? { type: "manual" as const },
-    }));
+    const types = JSON.parse(serializedState) as Array<Record<string, unknown>>;
+    
+    // Migrate old data structure to new one
+    return types.map((type) => {
+      // Handle old structure with titleConfig
+      if ('titleConfig' in type) {
+        const titleConfig = type.titleConfig as { type: string; attributeId?: string } | undefined;
+        const titleAttributeId = titleConfig?.type === 'linked' 
+          ? titleConfig.attributeId 
+          : undefined;
+        
+        return {
+          id: String(type.id),
+          name: String(type.title || type.name || 'Unnamed'),
+          attributes: (type.attributes as MachineType['attributes']) || [],
+          titleAttributeId,
+        };
+      }
+      
+      // Already in new format or handle missing properties
+      return {
+        id: String(type.id),
+        name: String(type.name || type.title || 'Unnamed'),
+        attributes: (type.attributes as MachineType['attributes']) || [],
+        titleAttributeId: type.titleAttributeId as string | undefined,
+      };
+    });
   } catch {
     return [];
   }

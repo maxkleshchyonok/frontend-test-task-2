@@ -64,23 +64,32 @@ export default function ManageTypesPage() {
               
               return (
                 <div key={type.id} style={{ backgroundColor: 'hsl(var(--color-card))' }} className="rounded-lg p-6 shadow-elevation-medium">
-                  <h3 className="text-xl font-bold mb-2">{type.title}</h3>
+                  <h3 className="text-xl font-bold mb-2">{type.name}</h3>
                   <p style={{ color: 'hsl(var(--color-muted-foreground))' }} className="text-sm mb-4">
                     {machineCount} machine(s) • {type.attributes.length} attribute(s)
                   </p>
                   
                   <div className="space-y-2 mb-4">
                     <p className="text-sm font-medium">Attributes:</p>
-                    <ul className="text-sm space-y-1">
-                      {type.attributes.map((attr) => (
-                        <li key={attr.id} className="flex justify-between">
-                          <span>{attr.name}</span>
-                          <span style={{ color: 'hsl(var(--color-muted-foreground))' }}>
-                            ({attr.type})
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
+                    {type.attributes.length > 0 ? (
+                      <ul className="text-sm space-y-1">
+                        {type.attributes.map((attr) => (
+                          <li key={attr.id} className="flex justify-between">
+                            <span>{attr.name}</span>
+                            <span style={{ color: 'hsl(var(--color-muted-foreground))' }}>
+                              ({attr.type})
+                              {type.titleAttributeId === attr.id && (
+                                <span style={{ color: 'hsl(var(--color-primary))' }}> • Title</span>
+                              )}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-sm" style={{ color: 'hsl(var(--color-muted-foreground))' }}>
+                        No attributes defined
+                      </p>
+                    )}
                   </div>
                   
                   <div className="flex gap-2">

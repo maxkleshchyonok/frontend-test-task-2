@@ -14,7 +14,6 @@ const loadState = (): Machine[] => {
       Record<string, unknown>
     >;
 
-    // Migrate old data structure to new one (remove title property)
     return machines.map((machine) => ({
       id: String(machine.id),
       typeId: String(machine.typeId),

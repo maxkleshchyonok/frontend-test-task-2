@@ -24,27 +24,36 @@ export default function MachineFormModal({
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    // Validate that the title attribute has a value (title is always required)
     if (machineType.titleAttributeId) {
       const titleValue = values[machineType.titleAttributeId];
-      const titleAttr = machineType.attributes.find(a => a.id === machineType.titleAttributeId);
-      
-      // Validation based on type
+      const titleAttr = machineType.attributes.find(
+        (a) => a.id === machineType.titleAttributeId
+      );
+
       let isValid = false;
-      if (titleAttr?.type === 'checkbox') {
-        // Checkbox must be explicitly set to true or false (not undefined)
-        isValid = typeof titleValue === 'boolean';
-      } else if (titleAttr?.type === 'number') {
-        // Number must exist and not be NaN
-        isValid = titleValue !== undefined && titleValue !== null && titleValue !== '' && !isNaN(Number(titleValue));
+      if (titleAttr?.type === "checkbox") {
+        isValid = typeof titleValue === "boolean";
+      } else if (titleAttr?.type === "number") {
+        isValid =
+          titleValue !== undefined &&
+          titleValue !== null &&
+          titleValue !== "" &&
+          !isNaN(Number(titleValue));
       } else {
-        // Text and date must not be empty
-        isValid = titleValue !== undefined && titleValue !== null && 
-                 (typeof titleValue === 'string' ? titleValue.trim() !== '' : String(titleValue) !== '');
+        isValid =
+          titleValue !== undefined &&
+          titleValue !== null &&
+          (typeof titleValue === "string"
+            ? titleValue.trim() !== ""
+            : String(titleValue) !== "");
       }
-      
+
       if (!isValid) {
-        alert(`Please provide a value for "${titleAttr?.name || 'title'}" (this is the title attribute)`);
+        alert(
+          `Please provide a value for "${
+            titleAttr?.name || "title"
+          }" (this is the title attribute)`
+        );
         return;
       }
     }
@@ -96,7 +105,10 @@ export default function MachineFormModal({
                 <label className="block text-sm font-medium mb-2">
                   {attr.name}
                   {machineType.titleAttributeId === attr.id && (
-                    <span style={{ color: 'hsl(var(--color-primary))' }} className="ml-2 text-xs">
+                    <span
+                      style={{ color: "hsl(var(--color-primary))" }}
+                      className="ml-2 text-xs"
+                    >
                       (Title)
                     </span>
                   )}
@@ -159,7 +171,10 @@ export default function MachineFormModal({
                       className="w-5 h-5 rounded"
                     />
                     {values[attr.id] === undefined && (
-                      <span style={{ color: 'hsl(var(--color-muted-foreground))' }} className="text-xs">
+                      <span
+                        style={{ color: "hsl(var(--color-muted-foreground))" }}
+                        className="text-xs"
+                      >
                         (Not set)
                       </span>
                     )}

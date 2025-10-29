@@ -5,6 +5,7 @@ import { useAppDispatch } from "@/store/hooks";
 import { deleteMachine } from "@/store/slices/machinesSlice";
 import { useState } from "react";
 import MachineFormModal from "./MachineFormModal";
+import { getMachineTitle } from "@/utils/getMachineTitle";
 
 interface MachineCardProps {
   machine: Machine;
@@ -24,7 +25,10 @@ export default function MachineCard({
     }
   };
 
-  const formatValue = (value: string | number | boolean, type: string) => {
+  const formatValue = (value: string | number | boolean | undefined, type: string) => {
+    if (value === undefined || value === null || value === "") {
+      return <span style={{ color: 'hsl(var(--color-muted-foreground))' }}>Not set</span>;
+    }
     if (type === "checkbox") {
       return value ? "✓ Yes" : "✗ No";
     }
@@ -41,11 +45,11 @@ export default function MachineCard({
         className="rounded-lg p-4 shadow-elevation-card hover:shadow-elevation-card-hover transition-shadow duration-200"
       >
         <h3 className="text-xl font-bold mb-4 pb-3 border-b" style={{ borderColor: "hsl(var(--color-border))" }}>
-          {machine.title}
+          {getMachineTitle(machine, machineType)}
         </h3>
 
         <div className="space-y-2">
-          {machineType.attributes.filter(attr => attr.id !== 'title').map((attr) => (
+          {machineType.attributes.map((attr) => (
             <div
               key={attr.id}
               className="flex justify-between items-start gap-2"

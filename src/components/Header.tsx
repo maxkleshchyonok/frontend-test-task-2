@@ -81,7 +81,7 @@ export default function Header({
                     }}
                     className="px-4 py-2 rounded-lg font-medium transition hover:opacity-80"
                   >
-                    {type.title}
+                    {type.name}
                   </button>
                 ))}
               </div>

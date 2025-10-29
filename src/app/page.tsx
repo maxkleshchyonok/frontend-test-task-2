@@ -106,7 +106,7 @@ function HomeContent() {
                   className="rounded-lg p-6 shadow-elevation-card"
                 >
                   <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-2xl font-bold">{type.title}</h2>
+                    <h2 className="text-2xl font-bold">{type.name}</h2>
                     <button
                       onClick={() => handleAddMachine(type.id)}
                       style={{
@@ -115,7 +115,7 @@ function HomeContent() {
                       }}
                       className="px-4 py-2 rounded-lg transition hover:opacity-90"
                     >
-                      + Add {type.title}
+                      + Add {type.name}
                     </button>
                   </div>
 
@@ -124,7 +124,7 @@ function HomeContent() {
                       style={{ color: "hsl(var(--color-muted-foreground))" }}
                       className="text-center py-8"
                     >
-                      No machines of this type yet. Click &quot;Add {type.title}
+                      No machines of this type yet. Click &quot;Add {type.name}
                       &quot; to create one.
                     </p>
                   ) : (

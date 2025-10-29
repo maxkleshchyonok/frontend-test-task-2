@@ -64,7 +64,7 @@ export default function ManageTypesPage() {
         </div>
 
         {machineTypes.length === 0 ? (
-          <div style={{ backgroundColor: 'hsl(var(--color-card))' }} className="text-center py-12 border rounded-lg">
+          <div style={{ backgroundColor: 'hsl(var(--color-card))' }} className="text-center py-12 rounded-lg shadow-elevation-medium">
             <h2 className="text-xl font-bold mb-2">No Machine Types</h2>
             <p style={{ color: 'hsl(var(--color-muted-foreground))' }}>
               Create your first machine type to get started.
@@ -76,7 +76,7 @@ export default function ManageTypesPage() {
               const machineCount = machines.filter(m => m.typeId === type.id).length;
               
               return (
-                <div key={type.id} style={{ backgroundColor: 'hsl(var(--color-card))' }} className="border rounded-lg p-6 shadow-sm">
+                <div key={type.id} style={{ backgroundColor: 'hsl(var(--color-card))' }} className="rounded-lg p-6 shadow-elevation-medium">
                   <h3 className="text-xl font-bold mb-2">{type.title}</h3>
                   <p style={{ color: 'hsl(var(--color-muted-foreground))' }} className="text-sm mb-4">
                     {machineCount} machine(s) • {type.attributes.length} attribute(s)

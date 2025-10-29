@@ -137,11 +137,12 @@ export default function MachineTypeForm({ machineType, onClose }: MachineTypeFor
               <div className="relative">
                 <input
                   type="text"
-                  value={titleConfig.type === 'manual' ? 'Manual entry' : ''}
-                  placeholder="Users will enter manually or link to attribute"
+                  value={titleConfig.type === 'manual' ? '' : `Linked to "${attributes.find(a => a.id === titleConfig.attributeId)?.name || 'attribute'}"`}
+                  placeholder={titleConfig.type === 'manual' ? 'Enter manual title configuration' : 'Select title configuration from dropdown'}
                   style={{ backgroundColor: 'hsl(var(--color-background))' }}
                   className="w-full px-3 py-2 pr-24 rounded-lg shadow-elevation-low focus:shadow-elevation-medium transition-shadow outline-none focus:ring-2 focus:ring-primary/20"
-                  disabled
+                  disabled={titleConfig.type !== 'manual'}
+                  readOnly={titleConfig.type !== 'manual'}
                 />
                 <div className="absolute right-2 top-1/2 -translate-y-1/2">
                   <select
@@ -154,7 +155,7 @@ export default function MachineTypeForm({ machineType, onClose }: MachineTypeFor
                       }
                     }}
                     style={{ backgroundColor: 'hsl(var(--color-muted) / 0.5)' }}
-                    className="px-2 py-1 pr-6 rounded text-xs shadow-elevation-low appearance-none cursor-pointer border border-transparent hover:border-primary/20 transition-colors"
+                    className="px-2 py-1 pr-6 rounded text-xs shadow-elevation-low appearance-none cursor-pointer hover:shadow-elevation-medium transition-all"
                     title="Choose title source"
                   >
                     <option value="title">manual</option>

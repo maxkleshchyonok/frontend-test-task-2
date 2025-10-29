@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, startTransition } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  startTransition,
+} from "react";
 
 type Theme = "light" | "dark" | "system";
 
@@ -14,25 +20,21 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  // Start with default values that match on server and client
   const [theme, setThemeState] = useState<Theme>("system");
-  const [systemPreference, setSystemPreference] = useState<"light" | "dark">("light");
+  const [systemPreference, setSystemPreference] = useState<"light" | "dark">(
+    "light"
+  );
   const [mounted, setMounted] = useState(false);
 
-  // Derive actual theme from current theme and system preference
-  const actualTheme: "light" | "dark" = 
+  const actualTheme: "light" | "dark" =
     theme === "system" ? systemPreference : theme;
 
-  // Load saved theme from localStorage after mount (client-side only)
   useEffect(() => {
-    // Get saved theme
     const savedTheme = localStorage.getItem("theme") as Theme | null;
-    
-    // Get system preference
+
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const systemPref = mediaQuery.matches ? "dark" : "light";
-    
-    // Initialize client-side state using startTransition to indicate low priority
+
     startTransition(() => {
       setSystemPreference(systemPref);
       if (savedTheme) {
@@ -41,7 +43,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       setMounted(true);
     });
 
-    // Listen for system theme changes
     const handleChange = (e: MediaQueryListEvent) => {
       setSystemPreference(e.matches ? "dark" : "light");
     };
@@ -50,7 +51,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
-  // Apply theme to DOM when actualTheme changes
   useEffect(() => {
     if (!mounted) return;
 
@@ -59,7 +59,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     root.classList.add(actualTheme);
   }, [actualTheme, mounted]);
 
-  // Save theme to localStorage when it changes
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
     if (typeof window !== "undefined") {

@@ -22,7 +22,6 @@ export default function MachineTypeForm({ machineType, onClose }: MachineTypeFor
   );
   const [error, setError] = useState('');
   
-  // Track original attribute IDs to know which ones existed before editing
   const [originalAttributeIds] = useState<Set<string>>(
     new Set(machineType?.attributes.map(attr => attr.id) ?? [])
   );
@@ -35,7 +34,6 @@ export default function MachineTypeForm({ machineType, onClose }: MachineTypeFor
       return;
     }
 
-    // Check if machine type is unique (case-insensitive)
     const isDuplicate = existingTypes.some(
       type => type.title.toLowerCase() === machineType_.trim().toLowerCase() && type.id !== machineType?.id
     );
@@ -45,7 +43,6 @@ export default function MachineTypeForm({ machineType, onClose }: MachineTypeFor
       return;
     }
 
-    // Ensure title attribute is always present
     const titleAttr: Attribute = {
       id: 'title',
       name: 'title',

@@ -11,7 +11,6 @@ const loadState = (): Machine[] => {
     const serializedState = localStorage.getItem('machines');
     if (serializedState === null) return [];
     const machines = JSON.parse(serializedState) as Machine[];
-    // Migrate old data to include title
     return machines.map((machine) => ({
       ...machine,
       title: machine.title ?? 'Untitled'

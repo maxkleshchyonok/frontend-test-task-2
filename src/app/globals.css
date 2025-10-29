@@ -2,53 +2,44 @@
 
 @layer theme {
   :root {
-    /* ===== Light Theme ===== */
-    --color-background: 210 25% 98%; /* Light mist gray-blue */
-    --color-foreground: 220 20% 15%; /* Charcoal text */
-    --color-card: 0 0% 100%; /* Clean white cards */
+    --color-background: 210 25% 98%;
+    --color-foreground: 220 20% 15%;
+    --color-card: 0 0% 100%;
     --color-card-foreground: 220 20% 15%;
     --color-popover: 0 0% 100%;
     --color-popover-foreground: 220 20% 15%;
 
-    --color-primary: 160 45% 45%; /* Muted teal-green (fresh & modern) */
+    --color-primary: 160 45% 45%;
     --color-primary-foreground: 0 0% 100%;
-    --color-secondary: 45 85% 55%; /* Warm amber-gold accent */
+    --color-secondary: 45 85% 55%;
     --color-secondary-foreground: 0 0% 15%;
-    --color-destructive: 15 70% 50%; /* Burnt orange (less harsh than red) */
+    --color-destructive: 15 70% 50%;
     --color-destructive-foreground: 0 0% 100%;
 
-    --color-muted: 210 20% 94%; /* Subtle gray background */
+    --color-muted: 210 20% 94%;
     --color-muted-foreground: 210 10% 40%;
     --color-border: 210 20% 85%;
     --color-input: 210 20% 96%;
-    --color-ring: 160 45% 50%; /* Matches teal primary */
+    --color-ring: 160 45% 50%;
 
-    /* Border radius */
     --radius-lg: 1rem;
     --radius-md: 0.5rem;
     --radius-sm: 0.25rem;
   }
 
   .dark {
-    /* Keep your existing base colors */
     --color-background: 220 20% 9%;
     --color-foreground: 0 0% 96%;
     --color-card: 220 20% 13%;
     --color-card-foreground: 0 0% 96%;
     --color-popover: 220 20% 14%;
     --color-popover-foreground: 0 0% 96%;
-
-    /* ↓ Updated button colors ↓ */
-    --color-primary: 210 25% 65%; /* Muted steel blue — calm, modern */
+    --color-primary: 210 25% 65%;
     --color-primary-foreground: 0 0% 10%;
-
-    --color-secondary: 160 15% 55%; /* Sage green-gray — balanced and earthy */
+    --color-secondary: 160 15% 55%;
     --color-secondary-foreground: 0 0% 10%;
-
-    --color-destructive: 10 40% 55%; /* Muted brick red — softer and elegant */
+    --color-destructive: 10 40% 55%;
     --color-destructive-foreground: 0 0% 10%;
-
-    /* Rest unchanged */
     --color-muted: 220 15% 20%;
     --color-muted-foreground: 220 10% 70%;
     --color-border: 220 15% 22%;
@@ -68,72 +59,51 @@ body {
   min-height: 100vh;
 }
 
-/* ===== Elevation Shadows ===== */
 @layer utilities {
-  /* Light mode shadows */
   .shadow-elevation-low {
-    box-shadow: 
-      0 1px 3px rgba(0, 0, 0, 0.08),
-      0 1px 2px rgba(0, 0, 0, 0.06);
-  }
-  
-  .shadow-elevation-medium {
-    box-shadow: 
-      0 4px 6px -1px rgba(0, 0, 0, 0.08),
-      0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  }
-  
-  .shadow-elevation-high {
-    box-shadow: 
-      0 10px 15px -3px rgba(0, 0, 0, 0.08),
-      0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  }
-  
-  .shadow-elevation-card {
-    box-shadow: 
-      0 2px 8px rgba(0, 0, 0, 0.06),
-      0 1px 3px rgba(0, 0, 0, 0.04);
-  }
-  
-  .shadow-elevation-card-hover {
-    box-shadow: 
-      0 4px 12px rgba(0, 0, 0, 0.1),
-      0 2px 6px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
   }
 
-  /* Dark mode shadows - more pronounced with subtle glow */
+  .shadow-elevation-medium {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  .shadow-elevation-high {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  .shadow-elevation-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+
+  .shadow-elevation-card-hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.06);
+  }
+
   .dark .shadow-elevation-low {
-    box-shadow: 
-      0 1px 3px rgba(0, 0, 0, 0.3),
-      0 1px 2px rgba(0, 0, 0, 0.2),
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2),
       0 0 0 1px rgba(255, 255, 255, 0.03);
   }
-  
+
   .dark .shadow-elevation-medium {
-    box-shadow: 
-      0 4px 6px -1px rgba(0, 0, 0, 0.4),
-      0 2px 4px -1px rgba(0, 0, 0, 0.3),
-      0 0 0 1px rgba(255, 255, 255, 0.04);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4),
+      0 2px 4px -1px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.04);
   }
-  
+
   .dark .shadow-elevation-high {
-    box-shadow: 
-      0 10px 15px -3px rgba(0, 0, 0, 0.5),
-      0 4px 6px -2px rgba(0, 0, 0, 0.4),
-      0 0 0 1px rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5),
+      0 4px 6px -2px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05);
   }
-  
+
   .dark .shadow-elevation-card {
-    box-shadow: 
-      0 2px 8px rgba(0, 0, 0, 0.4),
-      0 1px 3px rgba(0, 0, 0, 0.3),
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.3),
       0 0 0 1px rgba(255, 255, 255, 0.04);
   }
-  
+
   .dark .shadow-elevation-card-hover {
-    box-shadow: 
-      0 4px 12px rgba(0, 0, 0, 0.5),
-      0 2px 6px rgba(0, 0, 0, 0.4),
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.4),
       0 0 0 1px rgba(255, 255, 255, 0.06);
   }
 }

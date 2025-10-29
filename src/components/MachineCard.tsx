@@ -40,7 +40,6 @@ export default function MachineCard({
         style={{ backgroundColor: "hsl(var(--color-card))" }}
         className="rounded-lg p-4 shadow-elevation-card hover:shadow-elevation-card-hover transition-shadow duration-200"
       >
-        {/* Title at the top */}
         <h3 className="text-xl font-bold mb-4 pb-3 border-b" style={{ borderColor: "hsl(var(--color-border))" }}>
           {machine.title}
         </h3>

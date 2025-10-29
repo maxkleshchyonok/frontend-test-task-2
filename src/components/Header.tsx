@@ -13,7 +13,10 @@ export default function Header({ selectedType, onTypeChange }: HeaderProps) {
   const machineTypes = useAppSelector((state) => state.machineTypes.types);
 
   return (
-    <header style={{ backgroundColor: 'hsl(var(--color-card))' }} className="shadow-elevation-medium sticky top-0 z-10">
+    <header
+      style={{ backgroundColor: "hsl(var(--color-card))" }}
+      className="shadow-elevation-medium sticky top-0 z-10"
+    >
       <div className="container mx-auto px-4 py-4">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex items-center justify-between">
@@ -28,12 +31,14 @@ export default function Header({ selectedType, onTypeChange }: HeaderProps) {
               <button
                 onClick={() => onTypeChange("all")}
                 style={{
-                  backgroundColor: selectedType === "all" 
-                    ? 'hsl(var(--color-primary))' 
-                    : 'hsl(var(--color-muted))',
-                  color: selectedType === "all"
-                    ? 'hsl(var(--color-primary-foreground))'
-                    : 'inherit'
+                  backgroundColor:
+                    selectedType === "all"
+                      ? "hsl(var(--color-primary))"
+                      : "hsl(var(--color-muted))",
+                  color:
+                    selectedType === "all"
+                      ? "hsl(var(--color-primary-foreground))"
+                      : "inherit",
                 }}
                 className="px-4 py-2 rounded-lg font-medium transition hover:opacity-80"
               >
@@ -44,12 +49,14 @@ export default function Header({ selectedType, onTypeChange }: HeaderProps) {
                   key={type.id}
                   onClick={() => onTypeChange(type.id)}
                   style={{
-                    backgroundColor: selectedType === type.id
-                      ? 'hsl(var(--color-primary))'
-                      : 'hsl(var(--color-muted))',
-                    color: selectedType === type.id
-                      ? 'hsl(var(--color-primary-foreground))'
-                      : 'inherit'
+                    backgroundColor:
+                      selectedType === type.id
+                        ? "hsl(var(--color-primary))"
+                        : "hsl(var(--color-muted))",
+                    color:
+                      selectedType === type.id
+                        ? "hsl(var(--color-primary-foreground))"
+                        : "inherit",
                   }}
                   className="px-4 py-2 rounded-lg font-medium transition hover:opacity-80"
                 >
@@ -62,8 +69,8 @@ export default function Header({ selectedType, onTypeChange }: HeaderProps) {
               <Link
                 href="/manage-types"
                 style={{
-                  backgroundColor: 'hsl(var(--color-secondary))',
-                  color: 'hsl(var(--color-secondary-foreground))'
+                  backgroundColor: "hsl(var(--color-secondary))",
+                  color: "hsl(var(--color-secondary-foreground))",
                 }}
                 className="px-4 py-2 rounded-lg transition hover:opacity-80 font-medium whitespace-nowrap"
               >

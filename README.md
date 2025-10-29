@@ -1,67 +1,130 @@
-# frontend test task
+# Next.js + Redux Toolkit + Tailwind CSS PWA
 
-## Problem statement:
+This is a modern Progressive Web App (PWA) built with the following technologies:
 
-The company Construction Machine Management Inc. manages a fleet of diverse building machines and rents them out to building companies. The director Mr. Chechnik manages those with multiple paper staple folders. He would like to manage the inventory on his computer and asks you to develop an application for that purpose.
+- **Next.js 16** - React framework with App Router
+- **TypeScript** - Type-safe development
+- **Redux Toolkit (RTK)** - State management
+- **Tailwind CSS** - Utility-first CSS framework
+- **PWA Support** - Installable, offline-capable progressive web app
+- **ESLint** - Code linting
 
-## User stories:
+## Project Structure
 
-1. As a staff member I want to have different machine types (bull dozers, cranes, chainsaws, ...)
-2. As a staff member I would like to specify which attributes the machine type has **once** (weight, power, manufacturing date, ...)
-3. As a staff member I want that attributes can be date, text, checkbox or number
-4. As a staff member I want that all machines of one type share attributes (all cranes have a weight, manufacture date as well as a maximum lift weight for example)
-5. As a staff member I want to set a title for a machine type (Chainsaw, Bulldozer, ...)
-6. As a staff member I want to be able to add new machine types as well as to edit or delete existing ones at any time
-7. As a staff member I want to have many machines of each machine type ( for example 6 chainsaws from different brands that have different characteristics)
-8. As a staff member, I want to be able to filter by machine type (See all chain saws, all bull dozers, ...).
-9. As a staff member I want to see all machines grouped by their type on one screen
-10. As a staff member I want to be able to add new machines as well as to edit or delete existing ones at any time
-11. As a staff member I want to use URL navigation
-12. As a staff member I want that everything is saved even after page reload
-13. As a staff member I want to use the app on my mobile phone or tablet as well as on the computer
+```
+src/
+├── app/                    # Next.js app router pages
+│   ├── layout.tsx         # Root layout with Redux Provider
+│   ├── page.tsx           # Home page
+│   └── globals.css        # Global styles
+├── components/            # React components
+│   ├── ReduxProvider.tsx  # Redux Provider wrapper
+│   └── Counter.tsx        # Example counter component
+└── store/                 # Redux store configuration
+    ├── store.ts           # Store setup
+    ├── hooks.ts           # Typed Redux hooks
+    └── slices/            # Redux slices
+        └── exampleSlice.ts # Example slice
+```
 
-**For a demo watch the following video: [>> Watch it on youtube](https://drive.google.com/open?id=1fQnDIv8Q-JL5mKf9qaT7ajrMA2ACfYJU)**
+## Getting Started
 
-## Do's
+First, run the development server:
 
-- use a library of your choice for the UI.
-- use any other library that you consider helpful
-- use ES6
-- use React
-- use Redux for state management
-- use create-react-app ([https://github.com/facebook/create-react-app])
-- use local storage
-- preferably, write function components.
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-## Dont's
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-- create an API to store the data to a server.
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## Bonus tasks
+## Redux Store
 
-Bonus tasks will give extra points but cannot affect your score negatively. If you have time left, you should do them.
+The Redux store is configured with Redux Toolkit and includes:
 
-- use Typescript
-- create PWA (progressive web app)
+- **Typed hooks** (`useAppDispatch`, `useAppSelector`) for better TypeScript support
+- **Example slice** demonstrating state management with a counter
+- **Provider component** wrapping the app in `layout.tsx`
 
-## Due Date
+### Adding a New Slice
 
-- starting from the date of receiving the test, you have **until the sun rises again** to submit it.
+1. Create a new file in `src/store/slices/yourSlice.ts`
+2. Define your slice with `createSlice`
+3. Import and add the reducer to `src/store/store.ts`
 
-## Grading
+Example:
 
-We will grade your project by 5 attributes, each on a scale of 1-10. If an attribute dips below 7 it disqualifies your solution. For every bonus task done well we will add 0,5 points. You need an average score of at least 8 to pass this round.
+```typescript
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-1. Feature completeness 1-10
-2. User friendliness 1-10
-3. No edge cases & bug free 1-10
-4. Code style & architecture 1-10
+interface YourState {
+  // Define your state shape
+}
 
-## Hints
+const initialState: YourState = {
+  // Initial state
+};
 
-1. 4/10 people fail on feature completeness because they did not read the project description carefully or asked questions. Our tip: Read carefully, check if your project fullfills every user story and ask if you dont understand something 100 %. You can even ask questions during implementing the project - we are here to help!
-2. 5/10 people fail because their code is buggy and they have not tested it properly for edge cases. If you test < 2 hours the chance is high, you belong to this category. Our tip: test your stuff!
+export const yourSlice = createSlice({
+  name: 'yourFeature',
+  initialState,
+  reducers: {
+    // Define your actions
+  },
+});
 
-## Code review
+export const { /* your actions */ } = yourSlice.actions;
+export default yourSlice.reducer;
+```
 
-If you are done, please schedule a code review with me under [https://tinyurl.com/tobicodereview](https://tinyurl.com/react-code-review). In this call I will grade your code and give you feedback for your personal learning. Also send me the repo url via an email shashank@veranstaltungsbutler.de.
+## Tailwind CSS
+
+Tailwind CSS is pre-configured and ready to use. The configuration file is located at `tailwind.config.ts`.
+
+## Progressive Web App (PWA)
+
+This app is configured as a PWA with the following features:
+
+- **Installable** - Users can install the app on their device
+- **Offline Support** - Service worker caches assets for offline use
+- **App-like Experience** - Runs in standalone mode without browser UI
+- **Auto-updates** - Service worker updates automatically
+
+### PWA Configuration
+
+- **Manifest**: `public/manifest.json` - Defines app metadata, icons, and display mode
+- **Service Worker**: Automatically generated by `next-pwa` in production
+- **Icons**: `public/icon.svg` - App icon (replace with your own)
+
+### Testing PWA Features
+
+1. Build the app for production: `npm run build`
+2. Start the production server: `npm start`
+3. Open in Chrome/Edge and check the install prompt
+4. Use Chrome DevTools > Application > Service Workers to verify
+
+**Note**: PWA features are disabled in development mode for better DX.
+
+## Learn More
+
+To learn more about the technologies used, check out:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API
+- [Redux Toolkit Documentation](https://redux-toolkit.js.org/) - learn about Redux Toolkit
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs) - learn about Tailwind CSS
+- [PWA Documentation](https://web.dev/progressive-web-apps/) - learn about Progressive Web Apps
+- [next-pwa](https://github.com/shadowwalker/next-pwa) - Next.js PWA plugin documentation
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
